@@ -1,4 +1,4 @@
-package com.lyhcoding.myblog.controller;
+package com.lyhcoding.myblog.controller.viewtest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
