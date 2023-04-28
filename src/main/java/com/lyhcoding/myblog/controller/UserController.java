@@ -26,6 +26,18 @@ public class UserController {
     private final UserService userService;
     private final HttpSession session;
 
+    @GetMapping("/s/user/{id}/updateForm")
+    public String updateForm(@PathVariable Long id, Model model, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        // 1. 권한 체크
+        if(id != myUserDetails.getUser().getId()){
+            throw new Exception403("권한이 없습니다");
+        }
+        // 2. 회원 정보 조회
+        User userPS = userService.회원정보보기(id);
+        model.addAttribute("user", userPS);
+        return "user/updateForm";
+    }
+
     // 인증이 되지 않은 상태에서 인증과 관련된 주소는 앞에 엔티티 적지 않기
     // write (post) : /리소스/식별자(pk, uk)/save or delete or update
     // read (get) : /리소스/식별자(pk, uk)
