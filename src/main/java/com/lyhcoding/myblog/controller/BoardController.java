@@ -52,4 +52,10 @@ public class BoardController {
         model.addAttribute("board", board);
         return "board/detail"; // RequestDispatcher => request 덮어쓰기 기술
     }
+
+    @PostMapping("/s/board/{id}/delete")
+    public String delete(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        boardService.게시글삭제(id, myUserDetails.getUser().getId());
+        return "redirect:/";
+    }
 }

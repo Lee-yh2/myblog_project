@@ -1,6 +1,8 @@
 package com.lyhcoding.myblog.service;
 
 import com.lyhcoding.myblog.core.exception.ssr.Exception400;
+import com.lyhcoding.myblog.core.exception.ssr.Exception403;
+import com.lyhcoding.myblog.core.exception.ssr.Exception500;
 import com.lyhcoding.myblog.core.util.MyParseUtil;
 import com.lyhcoding.myblog.dto.board.BoardRequest;
 import com.lyhcoding.myblog.model.board.Board;
@@ -67,5 +69,20 @@ public class BoardService {
         // 3. 사실 @ManyToOne은 Eager 전략을 쓰는 것이 좋다.
         // boardPS.getUser().getUsername();
         return boardPS;
+    }
+
+    @Transactional
+    public void 게시글삭제(Long id, Long userId) {
+        Board boardPS = boardRepository.findByIdFetchUser(id).orElseThrow(
+                ()-> new Exception400("id", "게시글 아이디를 찾을 수 없습니다")
+        );
+        if(boardPS.getUser().getId() != userId){
+            throw new Exception403("권한이 없습니다");
+        }
+        try {
+            boardRepository.delete(boardPS);
+        }catch (Exception e){
+            throw new Exception500("게시글 삭제 실패 : "+e.getMessage());
+        }
     }
 }
